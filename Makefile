@@ -13,26 +13,26 @@ include $(DEVKITPRO)/libounce/switch2_cpu.mk
 #---------------------------------------------------------------------------------
 TARGET		:=	ButtonBreakSwitch2
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source GameShare/sdk/src
 DATA		:=	data
-INCLUDES	:=	include
+INCLUDES	:=	include GameShare/sdk/include GameShare/sdk/src
 #ROMFS		:=	romfs
 
 APP_TITLE	:=	ButtonBreakSwitch 2
 APP_AUTHOR	:=	StrongEnough
-APP_VERSION	:=	0.6.0
+APP_VERSION	:=	0.8.0
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 ARCH	:=	$(SWITCH2_CPU) -mtp=soft -fPIC -ftls-model=local-exec
 
-CFLAGS	:=	-g -Wall -O2 -ffunction-sections -fdata-sections \
-			$(ARCH) $(DEFINES)
+CFLAGS	=	-g -Wall -O2 -ffunction-sections -fdata-sections \
+			$(ARCH) $(DEFINES) $(INCLUDE) -D__SWITCH__ -D__SWITCH2__
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -D__SWITCH2__
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS	= $(CFLAGS) -std=gnu++20
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libounce/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
