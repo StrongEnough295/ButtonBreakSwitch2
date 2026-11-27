@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.13)
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    project(GameShareSDK LANGUAGES C CXX)
+endif()
+enable_language(C)
+if(NOT NINTENDO_SWITCH2 AND NOT PLATFORM_SWITCH2)
+    message(FATAL_ERROR "GameShare SDK needs the public libounce Switch2 toolchain")
+endif()
+
+add_library(gameshare STATIC src/host.cpp src/guest_input.cpp src/guest_display.cpp)
+option(GAMESHARE_ENABLE_CPU_STREAMER "Build the pinned libounce CPU image provider" ON)
+if(GAMESHARE_ENABLE_CPU_STREAMER)
+    set(_gameshare_sdk_version "")
+    foreach(_version_file ounce-devkit-version.txt ounce-sdk-version.txt)
+        if(EXISTS "$ENV{DEVKITPRO}/${_version_file}")
+            file(READ "$ENV{DEVKITPRO}/${_version_file}" _gameshare_sdk_version)
+            break()
+        endif()
+    endforeach()
+    if(NOT _gameshare_sdk_version MATCHES "libounce d1718bb7076f")
+        message(FATAL_ERROR "CPU image streaming requires qualified libounce d1718bb7076f. Use GAMESHARE_ENABLE_CPU_STREAMER=OFF for the renderer-independent API on another SDK.")
+    endif()
+    target_sources(gameshare PRIVATE src/cpu_image_streamer.c src/cpu_image_target.cpp)
+    target_compile_definitions(gameshare PUBLIC GAMESHARE_HAS_CPU_STREAMER=1)
+else()
+    target_compile_definitions(gameshare PUBLIC GAMESHARE_HAS_CPU_STREAMER=0)
+endif()
+add_library(gameshare::gameshare ALIAS gameshare)
+include(GNUInstallDirs)
+target_compile_features(gameshare PUBLIC cxx_std_20)
+set_target_properties(gameshare PROPERTIES C_STANDARD 11 C_STANDARD_REQUIRED YES)
+target_include_directories(gameshare PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(gameshare PUBLIC nx)
+
+include(CMakePackageConfigHelpers)
+configure_file(cmake/gameshare-config.cmake.in gameshare-config.cmake @ONLY)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/gameshare-config-version.cmake
+    VERSION 0.1.0 COMPATIBILITY SameMajorVersion)
+install(TARGETS gameshare EXPORT gameshare-targets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(EXPORT gameshare-targets NAMESPACE gameshare:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/gameshare)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gameshare-config.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/gameshare-config-version.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/gameshare)
