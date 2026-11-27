@@ -1,4 +1,5 @@
-main.o: C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/source/main.c \
+main.o: \
+ C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/source/main.cpp \
  C:/devkitPro/libounce/include/switch.h \
  C:/devkitPro/libounce/include/switch/types.h \
  C:/devkitPro/libounce/include/switch/target.h \
@@ -183,7 +184,9 @@ main.o: C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/source/main.c \
  C:/devkitPro/libounce/include/switch/crypto/cmac.h \
  C:/devkitPro/libounce/include/switch/crypto/sha1.h \
  C:/devkitPro/libounce/include/switch/crypto/hmac.h \
- C:/devkitPro/libounce/include/switch/crypto/crc.h
+ C:/devkitPro/libounce/include/switch/crypto/crc.h \
+ C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/GameShare/sdk/include/gameshare/host.hpp \
+ C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/GameShare/sdk/include/gameshare/controller.hpp
 C:/devkitPro/libounce/include/switch.h:
 C:/devkitPro/libounce/include/switch/types.h:
 C:/devkitPro/libounce/include/switch/target.h:
@@ -369,3 +372,5 @@ C:/devkitPro/libounce/include/switch/crypto/cmac.h:
 C:/devkitPro/libounce/include/switch/crypto/sha1.h:
 C:/devkitPro/libounce/include/switch/crypto/hmac.h:
 C:/devkitPro/libounce/include/switch/crypto/crc.h:
+C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/GameShare/sdk/include/gameshare/host.hpp:
+C:/Users/valor/OneDrive/Desktop/ButtonBreakSwitch2/GameShare/sdk/include/gameshare/controller.hpp:
